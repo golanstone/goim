@@ -57,24 +57,40 @@ Binary. Response is same as the request.
 | 3 | Server reply heartbeat|
 | 7 | authentication request |
 | 8 | authentication response |
+| 9 | receive raw message (batch messages). sub message operation 18 and 20 |
 | 18 | send message to other request |
 | 19 | send message to other  response |
 | 20 | send message to group request |
 | 21 | send message to group response |
 
-- operation=2
+### operation=2
 
 ```$xslt
     header 
 ```
 
-- operation=7 
+### operation=7 
 
 ```json
     {"mid":123, "mkey":"xxoo"}
 ```
+
+### operation=9
+
+| field | type | commet|
+| :-----     | :---  | :---     |
+| header(1) | header | message header 1 |
+| body(1)| body | message body 1|
+| header(2) | header | message header 2 |
+| body(2)| body | message body 2 |
+| ... | ... | ... |
+| header(n) | header | message header n |
+| body(n)| body | message body n |
+
     
-- operation=18 
+### operation=18 
+
+- send message
 
 | field | type | commet|
 | :-----     | :---  | :---     |
@@ -82,14 +98,25 @@ Binary. Response is same as the request.
 | to | int32 | receiver mid |
 | msg | []byte | message body |
 
-- operation=19
+- receive message:
 
 | field | type | commet|
 | :-----     | :---  | :---     |
-| ret | int8 | result 0:succ 1:failed |
+| chatId | int64 | chat seq id |
+| from | int32 | sender mid |
+| to | int32 | receiver mid |
+| msg | []byte | message body |
+
+### operation=19
+
+| field | type | commet|
+| :-----     | :---  | :---     |
+| ret | int8 | result 0:succ -1:failed |
 | chatId | int64 | chat index |
 
-- operation=20
+### operation=20
+
+- send message
 
 | field | type | commet|
 | :-----     | :---  | :---     |
@@ -97,9 +124,18 @@ Binary. Response is same as the request.
 | to | int32 | receiver group id |
 | msg | []byte | message body |
 
-- operation=21
+- receive message
 
 | field | type | commet|
 | :-----     | :---  | :---     |
-| ret | int8 | result 0:succ 1:failed |
+| chatId | int64 | chat seq id |
+| from | int32 | sender mid |
+| to | int32 | receiver group id |
+| msg | []byte | message body |
+
+### operation=21
+
+| field | type | commet|
+| :-----     | :---  | :---     |
+| ret | int8 | result 0:succ -1:failed |
 | chatId | int64 | chat index |
